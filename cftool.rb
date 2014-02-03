@@ -134,6 +134,7 @@ def run(problem, test_case)
     resfile = File.open(outfile, "r")
     output = resfile.read
     resfile.close
+    File.delete outfile
     expfile = File.open("test_cases/#{problem}#{test_case}.out", "r")
     expected = expfile.read
     expfile.close
@@ -150,6 +151,7 @@ def run(problem, test_case)
       false
     end
   else
+    File.delete outfile
     puts "Test #{test_case}: Error running code...\n"
     false
   end
