@@ -32,15 +32,19 @@ Generates A, B, C, D and E templated cpp files
 
 	-p, --prepare <contest>
 	
-Prepares the test cases of <contest> (needs to be done before -r or -t)
+Prepares the test cases of 'contest' (needs to be done before -r or -t)
 
 	-r, --run <code_file>,<problem>
 
-Runs the <code_file> cpp file to the test cases of <problem> [A, B, C, D, E] from the prepared contest
+Runs the <code_file> cpp file to the test cases of 'problem' [A, B, C, D, E] from the prepared contest
+
+	-r, --run <problem>
+
+Assumes the code file is 'problem'.cpp and runs it to the test cases of 'problem' [A, B, C, D, E] from the prepared contest
 
 	-t, --runtest <code_file>,<problem>,<case>
 	
-Runs the <code_file> cpp file to the test case <case> of <problem> [A, B, C, D, E] from the prepared contest
+Runs the 'code_file' cpp file to the test case 'case' of 'problem' [A, B, C, D, E] from the prepared contest
 
 	-l, --[no-]long
 	
