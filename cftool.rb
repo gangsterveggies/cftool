@@ -10,6 +10,12 @@ require 'net/http'
 require 'optparse'
 require 'rbconfig'
 
+class String
+  def red;            "\033[31m#{self}\033[0m" end
+  def green;          "\033[32m#{self}\033[0m" end
+  def magenta;        "\033[35m#{self}\033[0m" end
+end
+
 def os
   @os ||= (
     host_os = RbConfig::CONFIG['host_os']
@@ -164,10 +170,10 @@ def run(problem, test_case)
     expected = expfile.read
     expfile.close
     if expected == output
-      puts "Test #{test_case}: Correct!\n"
+      puts "Test #{test_case}: Correct!".green
       true
     else
-      puts "Test #{test_case}: Output doesn't match...\n"
+      puts "Test #{test_case}: Output doesn't match...".red
       puts "Your code outputed:\n"
       puts output
       puts "The correct result should be:\n"
@@ -177,7 +183,7 @@ def run(problem, test_case)
     end
   else
     File.delete outfile
-    puts "Test #{test_case}: Error running code...\n"
+    puts "Test #{test_case}: Error running code...".magenta
     false
   end
 end
@@ -234,8 +240,14 @@ if __FILE__ == $0
 
     opts.on("-r", "--run <code_file>,<problem>", Array, "Runs the <code_file> cpp file to the test cases of <problem> [A, B, C, D, E] from the prepared contest") do |code, problem|
       options[:run] = true
-      options[:code_file] = code
-      options[:problem] = problem
+
+      if options[:problem].nil?
+        options[:code_file] = code + ".cpp"
+        options[:problem] = code
+      else
+        options[:code_file] = code
+        options[:problem] = problem
+      end
     end
 
     opts.on("-t", "--runtest <code_file>,<problem>,<case>", Array, "Runs the <code_file> cpp file to the test case <case> of <problem> [A, B, C, D, E] from the prepared contest") do |code, problem, test_case|
@@ -281,10 +293,11 @@ if __FILE__ == $0
               end
             end
 
-            puts "\nResult: #{counter} out of #{tests[options[:problem]]} correct.\n"
             if counter < tests[options[:problem]]
+              puts "\nResult: #{counter} out of #{tests[options[:problem]]} correct.".red
               puts "There were incorrect test cases!\n"
             else
+              puts "\nResult: #{counter} out of #{tests[options[:problem]]} correct.".green
               puts "Everything seems alright. Submit it!\n"
             end
           else
