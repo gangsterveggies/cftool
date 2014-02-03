@@ -11,9 +11,27 @@ require 'optparse'
 require 'rbconfig'
 
 class String
-  def red;            "\033[31m#{self}\033[0m" end
-  def green;          "\033[32m#{self}\033[0m" end
-  def magenta;        "\033[35m#{self}\033[0m" end
+  def red;
+    if os == :linux || os == :unix
+      "\033[31m#{self}\033[0m"
+    else
+      self
+    end
+  end
+  def green;
+    if os == :linux || os == :unix
+      "\033[32m#{self}\033[0m"
+    else
+      self
+    end
+  end
+  def magenta;
+    if os == :linux || os == :unix
+      "\033[35m#{self}\033[0m"
+    else
+      self
+    end
+  end
 end
 
 def os
