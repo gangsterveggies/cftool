@@ -96,7 +96,7 @@ def prepare(contest)
       else
         puts "There was an error preparing problem #{prob}...\n"
         puts "Make sure it is a regular CodeForces Round and that your internet connection is active.\n"
-        puts "Please run ./cftools -d to reset the directory and then rerun the prepare command.\n"
+        puts "Please run ./cftool -d to reset the directory and then rerun the prepare command.\n"
       end
     end
 
@@ -181,14 +181,14 @@ def print_banner
 / /___/ /_/ / /_/ /  __/ __/ / /_/ / /  / /__/  __(__  )/ / / /_/ / /_/ / (__  ) 
 \\____/\\____/\\__,_/\\___/_/    \\____/_/   \\___/\\___/____//_/  \\____/\\____/_/____/  
 
-\t---- A Tool for Codeforces Contexts by GangsterVeggies\n\n"
+\t---- A Tool for Codeforces Contests by GangsterVeggies\n\n"
 end
 
 if __FILE__ == $0
   print_banner
   options = {:generate=>false, :prepare=>false, :run=>false, :long=>false, :reset=>false}
   OptionParser.new do |opts|
-    opts.banner = "Usage: ./cftools [options]"
+    opts.banner = "Usage: ./cftool [options]"
 
     opts.on('-h', '--help', 'Displays this help text') do
       puts opts
