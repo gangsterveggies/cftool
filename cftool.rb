@@ -8,6 +8,25 @@ require 'cgi'
 require 'json'
 require 'net/http'
 require 'optparse'
+require 'rbconfig'
+
+def os
+  @os ||= (
+    host_os = RbConfig::CONFIG['host_os']
+    case host_os
+    when /mswin|msys|mingw|cygwin|bccwin|wince|emc/
+      :windows
+    when /darwin|mac os/
+      :macosx
+    when /linux/
+      :linux
+    when /solaris|bsd/
+      :unix
+    else
+      raise Error::WebDriverError, "unknown os: #{host_os.inspect}"
+    end
+  )
+end
 
 def get_title(contest)
   url = "http://codeforces.com/contest/#{contest}"
@@ -96,7 +115,7 @@ def prepare(contest)
       else
         puts "There was an error preparing problem #{prob}...\n"
         puts "Make sure it is a regular CodeForces Round and that your internet connection is active.\n"
-        puts "Please run ./cftool -d to reset the directory and then rerun the prepare command.\n"
+        puts "Please run ./cftool -s to reset the directory and then rerun the prepare command.\n"
       end
     end
 
@@ -129,7 +148,13 @@ end
 
 def run(problem, test_case)
   outfile = SecureRandom.hex(3) + ".txt"
-  result = system("./a.out < test_cases/#{problem}#{test_case}.in > #{outfile}")
+  if os == :linux || os == :unix
+    result = system("./a.out < test_cases/#{problem}#{test_case}.in > #{outfile}")
+  elsif os == :windows
+    result = system("a.exe < test_cases/#{problem}#{test_case}.in > #{outfile}")
+  else
+    print "OS not supported...\n"
+  end
   if result
     resfile = File.open(outfile, "r")
     output = resfile.read
