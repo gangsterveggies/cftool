@@ -10,6 +10,10 @@ To run the code you must have Ruby installed (2.0.0 recommended but 1.9.3 should
 
 Runs in Linux and Windows (tested) and should run in other unix system like Mac (untested). Linux is prefered obviously.
 
+## Features
+
+It only works with C++ code (sorry, no Java). It generates templated files (currenlty static) for all problems, gets the test cases, compiles the code and runs it with all test cases or with one in particular. Another cool feature is that CodeForces enforces the use of "%I64d" in reading or writing long long int variables, which doesn't compile in a lot of local systems. The tool has an option (-l) that when compiling code it automatically converts the "%I64d" to "%lld" and compiles it like so, leaving the original file untouched.
+
 ## How to use
 
 Usage:
