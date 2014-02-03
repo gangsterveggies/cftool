@@ -8,6 +8,8 @@ A CodeForces helper tool for regular rounds in Ruby.
 
 To run the code you must have Ruby installed (2.0.0 recommended but 1.9.3 should be fine).
 
+Runs in Linux and Windows (tested) and should run in other unix system like Mac (untested). Linux is prefered obviously.
+
 ## How to use
 
 Usage:
