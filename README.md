@@ -8,7 +8,7 @@ A CodeForces helper tool for regular rounds in Ruby.
 
 To run the code you must have Ruby installed (2.0.0 recommended but 1.9.3 should be fine).
 
-Runs in Linux and Windows (tested) and should run in other unix system like Mac (untested). Linux is prefered obviously.
+Runs in Linux (by me) and Windows (by my friend facanferff, thank you!) and should run in other unix system like Mac (untested). Linux is prefered obviously.
 
 ## Features
 
@@ -29,6 +29,10 @@ Displays the help text
 	-g, --generate
 
 Generates A, B, C, D and E templated cpp files
+
+	-d, --template <file>
+	
+Set 'file' as template file in the generate command
 
 	-p, --prepare <contest>
 	
