@@ -73,12 +73,10 @@ int main()
   return 0;
 }
 "
-  if os == :linux
-    if File.exists? File.join(Dir.home, ".cftools/template.cpp")
-      cfile = File.open(File.join(Dir.home, ".cftools/template.cpp"), "r")
-      template = cfile.read
-      cfile.close
-    end
+  if File.exists? File.join(Dir.home, ".cftools/template.cpp")
+    cfile = File.open(File.join(Dir.home, ".cftools/template.cpp"), "r")
+    template = cfile.read
+    cfile.close
   end
 
   ('A'..'E').each do |let|
