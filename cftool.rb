@@ -59,12 +59,8 @@ end
 
 def generate
   puts "Generating .cpp files...\n\n"
-  ('A'..'E').each do |let|
-    filename = let + ".cpp"
-    unless File.exists? filename
-      puts "Creating #{let}.cpp file...\n"
-      cfile = File.open(filename, "w")
-      cfile.puts "#include <stdio.h>
+
+  template = "#include <stdio.h>
 #include <string.h>
 #include <vector>
 #include <algorithm>
@@ -77,10 +73,41 @@ int main()
   return 0;
 }
 "
+  if os == :linux
+    if File.exists? File.join(Dir.home, ".cftools/template.cpp")
+      cfile = File.open(File.join(Dir.home, ".cftools/template.cpp"), "r")
+      template = cfile.read
+      cfile.close
+    end
+  end
+
+  ('A'..'E').each do |let|
+    filename = let + ".cpp"
+    unless File.exists? filename
+      puts "Creating #{let}.cpp file...\n"
+      cfile = File.open(filename, "w")
+      cfile.puts template
       cfile.close
     end
   end
   puts "Done!"
+end
+
+def set_template(code_file)
+  if File.exists? code_file
+    unless File.directory? File.join(Dir.home, ".cftools")
+      Dir.mkdir(File.join(Dir.home, ".cftools"))
+    end
+    tfile = File.open(code_file, "r")
+    code = tfile.read
+    tfile.close
+    nfile = File.open(File.join(Dir.home, ".cftools/template.cpp"), "w")
+    nfile.puts code
+    nfile.close
+    puts "\nNew template file set!\n"
+  else
+    puts "Invalid or unexistant .cpp file...\n"
+  end
 end
 
 def prepared?
@@ -237,7 +264,7 @@ end
 
 if __FILE__ == $0
   print_banner
-  options = {:generate=>false, :prepare=>false, :run=>false, :long=>false, :reset=>false}
+  options = {:generate=>false, :prepare=>false, :run=>false, :long=>false, :template=>false, :reset=>false}
   OptionParser.new do |opts|
     opts.banner = "Usage: ./cftool [options]"
 
@@ -249,6 +276,11 @@ if __FILE__ == $0
     
     opts.on("-g", "--generate", "Generates A, B, C, D and E templated cpp files") do
       options[:generate] = true
+    end
+
+    opts.on("-d", "--template <file>", "Set <file> as template file in the generate command") do |code|
+      options[:code_file] = code
+      options[:template] = true
     end
 
     opts.on("-p", "--prepare <contest>", Integer, "Prepares the test cases of <contest> (needs to be done before -r or -t)") do |contest|
@@ -286,6 +318,7 @@ if __FILE__ == $0
 
   if options[:generate]
     generate
+
   elsif options[:prepare]
     unless prepared?
       prepare options[:contest]
@@ -293,6 +326,7 @@ if __FILE__ == $0
       puts "This directory already has a cftools configuration file...\n"
       puts "Try running ./cftool -d to reset the directory first and then run prepare again."
     end
+
   elsif options[:run]
     if prepared?
       if !options[:problem].nil? && options[:problem] >= 'A' && options[:problem] <= 'E'
@@ -336,6 +370,10 @@ if __FILE__ == $0
       puts "This directory doesn't have a cftools configuration file...\n"
       puts "You have to run ./cftool -p <contest> to prepare it first\n"
     end
+
+  elsif options[:template]
+    set_template options[:code_file]
+
   elsif options[:reset]
     if prepared?
       reset
