@@ -176,7 +176,7 @@ def prepare(contest)
   end
 end
 
-def compile(filename, long)
+def compile(filename, long, c11)
   tmpname = SecureRandom.hex(3) + ".cpp"
   FileUtils.copy(filename, tmpname)
 
@@ -190,7 +190,12 @@ def compile(filename, long)
     cfile.close
   end
 
-  result = system("g++ #{tmpname}")
+  extra = ""
+  if c11
+    extra = "-std=c++11 "
+  end
+
+  result = system("g++ -O2 " + extra + "#{tmpname}")
   File.delete tmpname
   result
 end
@@ -262,7 +267,7 @@ end
 
 if __FILE__ == $0
   print_banner
-  options = {:generate=>false, :prepare=>false, :run=>false, :long=>false, :template=>false, :reset=>false}
+  options = {:generate=>false, :prepare=>false, :run=>false, :long=>false, :template=>false, :reset=>false, :c11=>false}
   OptionParser.new do |opts|
     opts.banner = "Usage: ./cftool [options]"
 
@@ -309,6 +314,10 @@ if __FILE__ == $0
       options[:long] = long
     end
 
+    opts.on("-c", "--[no-]c11", "Compile with C++11") do |long|
+      options[:c11] = true
+    end
+
     opts.on("-s", "--reset", "Delete any cftools configuration files present") do
       options[:reset] = true
     end
@@ -328,7 +337,7 @@ if __FILE__ == $0
   elsif options[:run]
     if prepared?
       if !options[:problem].nil? && options[:problem] >= 'A' && options[:problem] <= 'E'
-        if compile options[:code_file], options[:long]
+        if compile options[:code_file], options[:long], options[:c11]
           puts "Compilation completed successfully...\n\n"
           tests = JSON.parse(IO.read(".cfconfig"))
           if options[:test_case].nil?
